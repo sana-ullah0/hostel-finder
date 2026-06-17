@@ -1,25 +1,33 @@
 <?php
-// ============================================
-// Database Configuration
-// ============================================
+function getDB() {
+    $host = $_ENV['DB_HOST'] ?? 'localhost';
+    $port = $_ENV['DB_PORT'] ?? '4000';
+    $db   = $_ENV['DB_NAME'] ?? 'hostel_finder';
+    $user = $_ENV['DB_USER'] ?? 'root';
+    $pass = $_ENV['DB_PASS'] ?? '';
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'hostel_finder');
+    // TiDB requires SSL — this line is the key difference from regular MySQL
+    $ssl  = $_ENV['DB_SSL']  ?? 'false';
 
-function getDBConnection() {
     try {
-        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
-        $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
+
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ]);
-        return $pdo;
+        ];
+
+        // Enable SSL for TiDB Cloud (required on production)
+        if ($ssl === 'true') {
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+            $options[PDO::MYSQL_ATTR_SSL_CA] = '';
+        }
+
+        return new PDO($dsn, $user, $pass, $options);
+
     } catch (PDOException $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+        echo json_encode(['success' => false, 'error' => 'DB connection failed']);
         exit;
     }
 }
