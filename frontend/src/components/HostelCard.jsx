@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BACKEND_URL } from '../services/api';
 
 const FACILITY_ICONS = {
   wifi: { icon: '📶', label: 'WiFi' },
@@ -25,7 +26,6 @@ function StarRating({ rating }) {
 export default function HostelCard({ hostel, style }) {
   const navigate = useNavigate();
   const imageUrl = hostel.primary_image || (hostel.images && hostel.images[0]);
-  const backendUrl = 'http://localhost/hostel-finder/backend/';
 
   const activeFacilities = Object.entries(FACILITY_ICONS)
     .filter(([key]) => hostel[key] == 1)
@@ -43,7 +43,7 @@ export default function HostelCard({ hostel, style }) {
     >
       {imageUrl ? (
         <img
-          src={`${backendUrl}${imageUrl}`}
+          src={`${BACKEND_URL}${imageUrl}`}
           alt={hostel.hostel_name}
           className="card-image"
           onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}

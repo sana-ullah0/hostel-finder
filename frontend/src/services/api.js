@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_BASE = '/api';
+// For local dev, the Vite proxy can forward /api to your PHP backend.
+// For production on Vercel, set VITE_API_BASE to the Render backend API URL.
+// Set VITE_BACKEND_URL to the backend root for static images and uploads.
+export const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost/hostel-finder/backend/';
 
 const api = axios.create({
   baseURL: API_BASE,

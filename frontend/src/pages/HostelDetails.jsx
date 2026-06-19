@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { hostelApi } from '../services/api';
+import { hostelApi, BACKEND_URL } from '../services/api';
 import './HostelDetails.css';
 
-const BACKEND_URL = 'http://localhost/hostel-finder/backend/';
 const FACILITY_LIST = [
   { key: 'wifi', icon: '📶', label: 'WiFi' },
   { key: 'mess', icon: '🍽️', label: 'Mess / Cafeteria' },

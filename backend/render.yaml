@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: hostel-finder-backend
+    env: php
+    region: oregon
+    plan: starter
+    buildCommand: ""
+    startCommand: "php -S 0.0.0.0:10000 -t . router.php"
+    envVars:
+      - key: DB_HOST
+        value: "your-db-host"
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_NAME
+        value: "hostel_finder"
+      - key: DB_USER
+        value: "your-db-user"
+      - key: DB_PASS
+        value: "your-db-password"
+      - key: DB_SSL
+        value: "false"
+      - key: BASE_PATH
+        value: ""
+    autoDeploy: true
+    instances:
+      type: shared
+      quantity: 1

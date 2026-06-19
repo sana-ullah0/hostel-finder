@@ -7,9 +7,16 @@ setCORSHeaders();
 
 // Parse the request URI
 $requestUri = $_SERVER['REQUEST_URI'];
-$basePath = '/hostel-finder/backend';
-$path = str_replace($basePath, '', parse_url($requestUri, PHP_URL_PATH));
-$path = rtrim($path, '/');
+$basePath = $_ENV['BASE_PATH'] ?? '';
+$parsedPath = parse_url($requestUri, PHP_URL_PATH);
+
+if ($basePath !== '') {
+    $path = preg_replace('#^' . preg_quote($basePath, '#') . '#', '', $parsedPath);
+} else {
+    $path = $parsedPath;
+}
+
+$path = rtrim($path, '/') ?: '/';
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Route matching
